@@ -34,9 +34,9 @@ const ACCESSIBILITY_KEYBOARD = {
 const MAX_ROWS_COUNT = 2;
 const MAX_SLOTS_COUNT_IN_ROW = 3;
 const MAX_SLOTS_COUNT_IN_ROW_MOBILE = 1;
-const PREFIX = 'la:dn:announcement-bar';
+const PREFIX = 'wb:sticky-bar';
 const ICONS = {
-    shipping: `<svg class="la-dn-icon la-dn-icon-shipping" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    shipping: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M8 13L8 8.79934C8.00028 8.51871 8.07229 8.24308 8.2088 8.00011C8.34532 7.75714 8.54154 7.55538 8.77778 7.41506L14.2222 4.2144C14.4587 4.07395 14.7269 4 15 4C15.2731 4 15.5413 4.07395 15.7778 4.2144L21.2222 7.41506C21.4585 7.55538 21.6547 7.75714 21.7912 8.00011C21.9277 8.24308 21.9997 8.51871 22 8.79934V15.2007C21.9997 15.4813 21.9277 15.7569 21.7912 15.9999C21.6547 16.2429 21.4585 16.4446 21.2222 16.5849L15.7778 19.7856C15.5413 19.9261 15.2731 20 15 20"
             stroke="currentColor"
@@ -50,7 +50,7 @@ const ICONS = {
           <path d="M9 19L12 19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M18.5 18V14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
         </svg>`,
-    gift: `<svg class="la-dn-icon la-dn-icon-gift" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    gift: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 12V19H6V12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M19 8H5V12H19V8Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M12 19V8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
@@ -68,7 +68,6 @@ const ICONS = {
           />
         </svg>`,
     discount: `<svg
-          class="la-dn-icon la-dn-icon-discount-percentage"
           aria-hidden="true"
           width="24"
           height="24"
@@ -96,19 +95,19 @@ const CLOSE_ANIMATION_MODE = 'fade';
 const ANIMATION_MODES = ['fade', 'slide'];
 const ANIMATION_CUBIC_BEZIER = 'cubic-bezier(.25,.8,.25,1)';
 const COMPONENTS_NAMES = {
-    LA_DN_ANNOUNCEMENT_BAR_ROW: 'LA-DN-ANNOUNCEMENT-BAR-ROW',
-    LA_DN_ANNOUNCEMENT_BAR_SLOT: 'LA-DN-ANNOUNCEMENT-BAR-SLOT',
-    LA_DN_ANNOUNCEMENT_BAR_MESSAGE: 'LA-DN-ANNOUNCEMENT-BAR-MESSAGE',
+    WB_STICKY_BAR_ROW: 'WB-STICKY-BAR-ROW',
+    WB_STICKY_BAR_SLOT: 'WB-STICKY-BAR-SLOT',
+    WB_STICKY_BAR_MESSAGE: 'WB-STICKY-BAR-MESSAGE',
 };
 
-const ANNOUNCEMENT_BAR_CONTAINER_TEMPLATE = document.createElement('template');
-ANNOUNCEMENT_BAR_CONTAINER_TEMPLATE.innerHTML = `
+const STICKY_BAR_CONTAINER_TEMPLATE = document.createElement('template');
+STICKY_BAR_CONTAINER_TEMPLATE.innerHTML = `
     <style>
         :host * {
             box-sizing: border-box;
             margin: 0;
         }
-        .la-dn-announcement-bar-container {
+        .wb-sticky-bar-container {
             position: fixed;
             left: 0;
             top: 0;
@@ -117,24 +116,24 @@ ANNOUNCEMENT_BAR_CONTAINER_TEMPLATE.innerHTML = `
             z-index: 99999999;
             flex-direction: column;
         }
-        .la-dn-announcement-bar-container ::slotted(*:nth-child(2)) {
+        .wb-sticky-bar-container ::slotted(*:nth-child(2)) {
             border-top: 2px solid #8a8585;
         }
     </style>
-    <div class="la-dn-announcement-bar-container">
+    <div class="wb-sticky-bar-container">
         <slot></slot>
     </div> 
 `;
 
-const ANNOUNCEMENT_BAR_ROW_TEMPLATE = document.createElement('template');
-ANNOUNCEMENT_BAR_ROW_TEMPLATE.innerHTML = `
+const STICKY_BAR_ROW_TEMPLATE = document.createElement('template');
+STICKY_BAR_ROW_TEMPLATE.innerHTML = `
     <style>
         :host * {
             box-sizing: border-box;
             margin: 0;
             user-select: none;
         }
-        .la-dn-announcement-bar-row-container {
+        .wb-sticky-bar-row-container {
             background-color: #000;
             color: #fff;
             font-size: 14px;
@@ -142,7 +141,7 @@ ANNOUNCEMENT_BAR_ROW_TEMPLATE.innerHTML = `
             align-items: center;
             justify-content: center;
         }
-        .la-dn-announcement-bar-row-wrapper {
+        .wb-sticky-bar-row-wrapper {
             width: 80vw;
             max-width: 800px;
             overflow: hidden;    
@@ -152,22 +151,22 @@ ANNOUNCEMENT_BAR_ROW_TEMPLATE.innerHTML = `
             align-items: center;
             justify-content: center;
         }
-        .la-dn-announcement-bar-row-container:not(.la-dn-announcement-bar-row--slider) ::slotted(*) {
+        .wb-sticky-bar-row-container:not(.wb-sticky-bar-row--slider) ::slotted(*) {
             border-right: 2px solid #8a8585;        
         }
-        .la-dn-announcement-bar-row-container:not(.la-dn-announcement-bar-row--slider) ::slotted(*:last-child) {
+        .wb-sticky-bar-row-container:not(.wb-sticky-bar-row--slider) ::slotted(*:last-child) {
             border: none;
         }
     </style>
-    <div class="la-dn-announcement-bar-row-container">
-        <div class="la-dn-announcement-bar-row-wrapper">
+    <div class="wb-sticky-bar-row-container">
+        <div class="wb-sticky-bar-row-wrapper">
             <slot></slot>
         </div>
     </div> 
 `;
 
-const ANNOUNCEMENT_BAR_SLOT_TEMPLATE = document.createElement('template');
-ANNOUNCEMENT_BAR_SLOT_TEMPLATE.innerHTML = `
+const STICKY_BAR_SLOT_TEMPLATE = document.createElement('template');
+STICKY_BAR_SLOT_TEMPLATE.innerHTML = `
     <style>
         :host * {
             box-sizing: border-box;
@@ -178,12 +177,12 @@ ANNOUNCEMENT_BAR_SLOT_TEMPLATE.innerHTML = `
             align-items: center;
             justify-content: center;
         }
-        .la-dn-announcement-bar-slot-container {
+        .wb-sticky-bar-slot-container {
             display: flex;
             width: 100%;
             align-items: center;
         }
-        .la-dn-announcement-bar-slot-wrapper {
+        .wb-sticky-bar-slot-wrapper {
             width: 100%;
             display: flex;
             align-items: center;
@@ -192,84 +191,84 @@ ANNOUNCEMENT_BAR_SLOT_TEMPLATE.innerHTML = `
             padding-top: 15px;
             padding-bottom: 15px;
         }
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper {
             justify-content: flex-start;
         }
-        .la-dn-announcement-bar-slot--slider {
+        .wb-sticky-bar-slot--slider {
             position: relative;
         }
-        .la-dn-announcement-bar-slot--slider.slider-container--with-controls {
+        .wb-sticky-bar-slot--slider.slider-container--with-controls {
             padding-left: 20px;
             padding-right: 20px;
         } 
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper > * {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper > * {
             position: relative;
             flex-shrink: 0;
             display: none;
             width: 100%;
             margin-right: -100%;
         }
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper .slide--active,
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper .slide-pos-next,
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper .slide-pos-prev  
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper .slide--active,
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper .slide-pos-next,
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper .slide-pos-prev  
         {
             display: flex;
         }
         /*SLIDE Effect*/
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-pos-prev {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-pos-prev {
             left: -100%;
         }        
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-pos-next {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-pos-next {
             left: 100%;
         }
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-prev {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-prev {
             transform: translateX(100%) !important;
         }
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-next {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-next {
             transform: translateX(-100%) !important;
         }
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-next,
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-prev {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-next,
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--slide .slide-prev {
             transition: transform .6s ${ANIMATION_CUBIC_BEZIER}
          }
         /*FADE Effect*/
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide-pos-prev, 
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide-pos-next {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide-pos-prev, 
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide-pos-next {
             left: 0;
             opacity: 0;
         }
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide-prev,
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide-next {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide-prev,
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide-next {
             transform: none;
             opacity: 1;
             transition: opacity .6s ${ANIMATION_CUBIC_BEZIER};
         }
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide--active.slide-prev,
-        .la-dn-announcement-bar-slot--slider .la-dn-announcement-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide--active.slide-next {
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide--active.slide-prev,
+        .wb-sticky-bar-slot--slider .wb-sticky-bar-slot-wrapper.slot-wrapper--with-animation--fade .slide--active.slide-next {
             opacity: 0;
         }
     </style>
-    <div class="la-dn-announcement-bar-slot-container">
-        <div class="la-dn-announcement-bar-slot-wrapper">
+    <div class="wb-sticky-bar-slot-container">
+        <div class="wb-sticky-bar-slot-wrapper">
         </div>
     </div> 
 `;
 
-const ANNOUNCEMENT_BAR_ERROR_TEMPLATE = document.createElement('template');
-ANNOUNCEMENT_BAR_ERROR_TEMPLATE.innerHTML = `
+const STICKY_BAR_ERROR_TEMPLATE = document.createElement('template');
+STICKY_BAR_ERROR_TEMPLATE.innerHTML = `
     <style>
-        .la-dn-announcement-bar-error {
+        .wb-sticky-bar-error {
             text-align: center;
             margin: 0;
             padding: 5px 0;
         }
     </style>
-    <p class="la-dn-announcement-bar-error">
+    <p class="wb-sticky-bar-error">
         <slot></slot>
     </p> 
 `;
-const ANNOUNCEMENT_BAR_MESSAGE_TEMPLATE = document.createElement('template');
-ANNOUNCEMENT_BAR_MESSAGE_TEMPLATE.innerHTML = `
+const STICKY_BAR_MESSAGE_TEMPLATE = document.createElement('template');
+STICKY_BAR_MESSAGE_TEMPLATE.innerHTML = `
     <style>
         :host * {
             box-sizing: border-box;
@@ -281,7 +280,7 @@ ANNOUNCEMENT_BAR_MESSAGE_TEMPLATE.innerHTML = `
             align-items: center;
             justify-content: center;
         }
-        .la-dn-announcement-bar-message {
+        .wb-sticky-bar-message {
             text-align: center;
             margin: 0;
             animation-fill-mode: both;
@@ -289,34 +288,34 @@ ANNOUNCEMENT_BAR_MESSAGE_TEMPLATE.innerHTML = `
             display: flex;
             align-items: center;
         }
-        .la-dn-announcement-bar-message svg {
+        .wb-sticky-bar-message svg {
             flex-shrink: 0;
             margin-right: 5px;
         }
-        .la-dn-announcement-bar-message i {
+        .wb-sticky-bar-message i {
             margin-right: 5px;
         }
-        .la-dn-announcement-bar-message img {
+        .wb-sticky-bar-message img {
             margin-right: 5px;
             width: 30px;
             height: 30px;
             border-radius: 50%;
         }
-        .la-dn-announcement-bar-message ::slotted(a[href]) {
+        .wb-sticky-bar-message ::slotted(a[href]) {
             color: #fff;
             font-weight: 600;
         }
-        .la-dn-announcement-bar-message.bar-message--highlighted-flash,
-        .la-dn-announcement-bar-message.bar-message--goal-achieved-flash
+        .wb-sticky-bar-message.bar-message--highlighted-flash,
+        .wb-sticky-bar-message.bar-message--goal-achieved-flash
          {
             animation-name: flash;
         }
-        .la-dn-announcement-bar-message.bar-message--highlighted-rubberBand,
-        .la-dn-announcement-bar-message.bar-message--goal-achieved-rubberBand {
+        .wb-sticky-bar-message.bar-message--highlighted-rubberBand,
+        .wb-sticky-bar-message.bar-message--goal-achieved-rubberBand {
             animation-name: rubberBand;
         }
-        .la-dn-announcement-bar-message.bar-message--highlighted-shakeX,
-        .la-dn-announcement-bar-message.bar-message--goal-achieved-shakeX {
+        .wb-sticky-bar-message.bar-message--highlighted-shakeX,
+        .wb-sticky-bar-message.bar-message--goal-achieved-shakeX {
             animation-name: shakeX;
         }
         @keyframes flash {
@@ -375,7 +374,7 @@ ANNOUNCEMENT_BAR_MESSAGE_TEMPLATE.innerHTML = `
           }
         }
     </style>
-    <p class="la-dn-announcement-bar-message">
+    <p class="wb-sticky-bar-message">
         <slot></slot>
     </p> 
 `;
@@ -383,7 +382,7 @@ ANNOUNCEMENT_BAR_MESSAGE_TEMPLATE.innerHTML = `
 const CLOSE_ICON_TEMPLATE = document.createElement('template');
 CLOSE_ICON_TEMPLATE.innerHTML = `
     <style>
-        .la-dn-announcement-bar-close-icon {
+        .wb-sticky-bar-close-icon {
             position: absolute;
             top: 30px;
             margin: auto;
@@ -396,7 +395,7 @@ CLOSE_ICON_TEMPLATE.innerHTML = `
             border: none;
         }
     </style>
-    <button class="la-dn-announcement-bar-close-icon">&#x2715;</button>    
+    <button class="wb-sticky-bar-close-icon">&#x2715;</button>    
 `;
 
 const CONTROLS_TEMPLATE = document.createElement('template');
@@ -405,7 +404,7 @@ CONTROLS_TEMPLATE.innerHTML = `
         :host * {
             box-sizing: border-box;
         }
-        .la-dn-announcement-bar-controls-container {
+        .wb-sticky-bar-controls-container {
             position: absolute;
             top: 0;
             bottom: 0;
@@ -418,7 +417,7 @@ CONTROLS_TEMPLATE.innerHTML = `
             justify-content: space-between;
             padding: 0 5px;
         }
-        .la-dn-announcement-bar-controls-container > button {
+        .wb-sticky-bar-controls-container > button {
             cursor: pointer;
             font-size: 26px;
             display: inline-block;
@@ -431,7 +430,7 @@ CONTROLS_TEMPLATE.innerHTML = `
             text-align: center;
         }
     </style>
-    <div class="la-dn-announcement-bar-controls-container">
+    <div class="wb-sticky-bar-controls-container">
         <button data-direction="previous">&#x2039;</button>
         <button data-direction="next">&#x203A;</button>
     </div>    
@@ -443,7 +442,7 @@ INDICATORS_TEMPLATE.innerHTML = `
         :host * {
             box-sizing: border-box;
         }
-        .la-dn-announcement-bar-indicators-container {
+        .wb-sticky-bar-indicators-container {
             position: absolute;
             bottom: 8px;
             margin: auto;
@@ -454,7 +453,7 @@ INDICATORS_TEMPLATE.innerHTML = `
             align-items: center;
             justify-content: center;
         }
-        .la-dn-announcement-bar-indicators-container > button {
+        .wb-sticky-bar-indicators-container > button {
             cursor: pointer;
             display: inline-flex;
             justify-content: center;
@@ -467,7 +466,7 @@ INDICATORS_TEMPLATE.innerHTML = `
             border: none;
             padding: 0;
         }
-        .la-dn-announcement-bar-indicators-container > button:after {
+        .wb-sticky-bar-indicators-container > button:after {
             content: "";
             position: absolute;
             background-color: #ccc;
@@ -475,13 +474,13 @@ INDICATORS_TEMPLATE.innerHTML = `
             height: 4px;
             border-radius: 50%;
         }
-        .la-dn-announcement-bar-indicators-container > button.active:after {
+        .wb-sticky-bar-indicators-container > button.active:after {
             background-color: #fff;
             width: 6px;
             height: 6px;
         }
     </style>
-    <div class="la-dn-announcement-bar-indicators-container"></div>    
+    <div class="wb-sticky-bar-indicators-container"></div>    
 `;
 
 const ROW_TEMPLATE = document.createElement('template');
@@ -492,13 +491,13 @@ ROW_TEMPLATE.innerHTML = `
             margin: 0;
             user-select: none;
         }
-        .la-dn-announcement-bar-row-wrapper {
+        .wb-sticky-bar-row-wrapper {
             overflow: hidden;
             display: flex;
             justify-content: center;
         }
     </style>
-    <div class="la-dn-announcement-bar-row-wrapper"></div> 
+    <div class="wb-sticky-bar-row-wrapper"></div> 
 `;
 
 const SliderModule = (() => {
@@ -720,7 +719,7 @@ Slider.prototype = {
         if (this.hasIndicators) {
             this.container.classList.add('slider-container--with-indicators');
             this.container.appendChild(INDICATORS_TEMPLATE.content.cloneNode(true));
-            const _indicatorsWrapper = this.container.querySelector('.la-dn-announcement-bar-indicators-container');
+            const _indicatorsWrapper = this.container.querySelector('.wb-sticky-bar-indicators-container');
             const _fragment = document.createDocumentFragment();
             for (let i = 0; i < this.slidesCount; i++) {
                 const _dot = document.createElement('button');
@@ -738,7 +737,7 @@ Slider.prototype = {
     },
     updateIndicators() {
         if (this.hasIndicators) {
-            const _indicatorsWrapper = this.container.querySelector('.la-dn-announcement-bar-indicators-container');
+            const _indicatorsWrapper = this.container.querySelector('.wb-sticky-bar-indicators-container');
             Array.from(_indicatorsWrapper.children).forEach((dot, index) => {
                 dot.classList.remove('active');
                 if (index === this.currentIndex) {
@@ -776,7 +775,7 @@ Slider.prototype = {
         if (this.hasControls) {
             this.container.classList.add('slider-container--with-controls');
             this.container.appendChild(CONTROLS_TEMPLATE.content.cloneNode(true));
-            const _controls = this.wrapper.parentNode.querySelectorAll('.la-dn-announcement-bar-controls-container > button');
+            const _controls = this.wrapper.parentNode.querySelectorAll('.wb-sticky-bar-controls-container > button');
             const self = this;
             _controls.forEach(control => {
                 control.onclick = function () {
@@ -897,7 +896,7 @@ const PubSub = {
     },
 }
 
-const ANNOUNCEMENT_BAR_UTILITY = {
+const STICKY_BAR_UTILITY = {
     checkCorrectComponentName(shadowRoot) {
         try {
             const _nonSupportedElement = this.hasNonSupportedElement(shadowRoot.host.children, shadowRoot.host.childComponentName);
@@ -907,7 +906,7 @@ const ANNOUNCEMENT_BAR_UTILITY = {
         } catch (err) {
             console.error(err.message);
             shadowRoot.innerHTML = `
-                <la-dn-announcement-bar-error>${err.message}</la-dn-announcement-bar-error>
+                <wb-sticky-bar-error>${err.message}</wb-sticky-bar-error>
             `
         }
     },
@@ -933,18 +932,18 @@ const ANNOUNCEMENT_BAR_UTILITY = {
     },
     userDisabledMotions: window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
-class LaDnAnnouncementBar extends HTMLElement {
+class WbStickyBar extends HTMLElement {
     #closeWithAnimation = DEFAULT_ANIMATION_ON_CLOSE;
     #isClosable = false;
 
     constructor() {
         super();
-        this.childComponentName = COMPONENTS_NAMES.LA_DN_ANNOUNCEMENT_BAR_ROW;
+        this.childComponentName = COMPONENTS_NAMES.WB_STICKY_BAR_ROW;
         this.messages = [];
         this.sliderInstance = null;
         this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(ANNOUNCEMENT_BAR_CONTAINER_TEMPLATE.content.cloneNode(true));
-        this.container = this.shadowRoot.querySelector('.la-dn-announcement-bar-container');
+        this.shadowRoot.appendChild(STICKY_BAR_CONTAINER_TEMPLATE.content.cloneNode(true));
+        this.container = this.shadowRoot.querySelector('.wb-sticky-bar-container');
         this.buildDNInstance();
         this.cycleAnimationMode = DEFAULT_ANIMATION_MODE;
         this.animationHighlightMode = DEFAULT_ANIMATION_HIGHLIGHT;
@@ -971,23 +970,23 @@ class LaDnAnnouncementBar extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
             case 'animation-on-close':
-                this.#closeWithAnimation = ANNOUNCEMENT_BAR_UTILITY.userDisabledMotions || newValue !== CLOSE_ANIMATION_MODE ? DEFAULT_ANIMATION_ON_CLOSE : CLOSE_ANIMATION_MODE;
+                this.#closeWithAnimation = STICKY_BAR_UTILITY.userDisabledMotions || newValue !== CLOSE_ANIMATION_MODE ? DEFAULT_ANIMATION_ON_CLOSE : CLOSE_ANIMATION_MODE;
                 break;
             case 'closeable':
                 this.#isClosable = newValue === 'true';
                 break;
             case 'animation-on-highlight':
-                this.animationHighlightMode = ANIMATION_HIGHLIGHT_MODES.indexOf(newValue) === -1 || ANNOUNCEMENT_BAR_UTILITY.userDisabledMotions
+                this.animationHighlightMode = ANIMATION_HIGHLIGHT_MODES.indexOf(newValue) === -1 || STICKY_BAR_UTILITY.userDisabledMotions
                     ? DEFAULT_ANIMATION_HIGHLIGHT
                     : newValue;
                 break;
             case 'animation-on-goal-achieved':
-                this.animationGoalAchievedMode = ANIMATION_GOAL_ACHIEVED_MODES.indexOf(newValue) === -1 || ANNOUNCEMENT_BAR_UTILITY.userDisabledMotions
+                this.animationGoalAchievedMode = ANIMATION_GOAL_ACHIEVED_MODES.indexOf(newValue) === -1 || STICKY_BAR_UTILITY.userDisabledMotions
                     ? DEFAULT_ANIMATION_GOAL_ACHIEVED
                     : newValue;
                 break;
             case 'animation-on-cycle':
-                this.cycleAnimationMode = ANIMATION_MODES.indexOf(newValue) === -1 || ANNOUNCEMENT_BAR_UTILITY.userDisabledMotions
+                this.cycleAnimationMode = ANIMATION_MODES.indexOf(newValue) === -1 || STICKY_BAR_UTILITY.userDisabledMotions
                     ? DEFAULT_ANIMATION_MODE
                     : newValue;
                 break;
@@ -999,7 +998,7 @@ class LaDnAnnouncementBar extends HTMLElement {
     onMount() {
         this.removeUnnecessaryRows();
         this.registerEvents();
-        ANNOUNCEMENT_BAR_UTILITY.checkCorrectComponentName(this.shadowRoot);
+        STICKY_BAR_UTILITY.checkCorrectComponentName(this.shadowRoot);
         this.checkVisibility();
         this.drawCloseIcon();
     }
@@ -1108,7 +1107,7 @@ class LaDnAnnouncementBar extends HTMLElement {
     drawCloseIcon() {
         if (this.#isClosable) {
             this.container.appendChild(CLOSE_ICON_TEMPLATE.content.cloneNode(true))
-            const _closeIcon = this.container.querySelector('.la-dn-announcement-bar-close-icon');
+            const _closeIcon = this.container.querySelector('.wb-sticky-bar-close-icon');
             _closeIcon.addEventListener('click', () => {
                 document.dispatchEvent(new CustomEvent(`${PREFIX}:close`))
             })
@@ -1116,27 +1115,21 @@ class LaDnAnnouncementBar extends HTMLElement {
     }
 
     buildDNInstance() {
-        window.discountNinja = {
-            Blocks: {
-                StickyBar: {
-                    Messages: MESSAGES,
-                }
-            }
-        }
+        window.__cusomMessages = MESSAGES;
     }
 }
 
-class LaDnAnnouncementBarRow extends HTMLElement {
+class WbStickyBarRow extends HTMLElement {
     constructor() {
         super();
-        this.childComponentName = COMPONENTS_NAMES.LA_DN_ANNOUNCEMENT_BAR_SLOT;
+        this.childComponentName = COMPONENTS_NAMES.WB_STICKY_BAR_SLOT;
         this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(ANNOUNCEMENT_BAR_ROW_TEMPLATE.content.cloneNode(true));
-        this.containerNode = this.shadowRoot.querySelector('.la-dn-announcement-bar-row-container')
+        this.shadowRoot.appendChild(STICKY_BAR_ROW_TEMPLATE.content.cloneNode(true));
+        this.containerNode = this.shadowRoot.querySelector('.wb-sticky-bar-row-container')
     }
 
     connectedCallback() {
-        ANNOUNCEMENT_BAR_UTILITY.checkCorrectComponentName(this.shadowRoot);
+        STICKY_BAR_UTILITY.checkCorrectComponentName(this.shadowRoot);
         this.removeUnnecessarySlots();
     }
 
@@ -1146,7 +1139,7 @@ class LaDnAnnouncementBarRow extends HTMLElement {
 
     removeUnnecessarySlots() {
         setTimeout(() => { // the children list don't render sync with parent
-            const _maxSlot = ANNOUNCEMENT_BAR_UTILITY.isDeviceMobile() ? MAX_SLOTS_COUNT_IN_ROW_MOBILE : MAX_SLOTS_COUNT_IN_ROW;
+            const _maxSlot = STICKY_BAR_UTILITY.isDeviceMobile() ? MAX_SLOTS_COUNT_IN_ROW_MOBILE : MAX_SLOTS_COUNT_IN_ROW;
             while (this.children.length > _maxSlot) {
                 this.children[this.children.length - 1].isRemoved = true;
                 this.children[this.children.length - 1].remove();
@@ -1155,10 +1148,10 @@ class LaDnAnnouncementBarRow extends HTMLElement {
     }
 }
 
-class LaDnAnnouncementBarSlot extends HTMLElement {
+class WbStickyBarSlot extends HTMLElement {
     constructor() {
         super();
-        this.childComponentName = COMPONENTS_NAMES.LA_DN_ANNOUNCEMENT_BAR_MESSAGE;
+        this.childComponentName = COMPONENTS_NAMES.WB_STICKY_BAR_MESSAGE;
         this.attachShadow({mode: 'open'});
         this.repaintShadowRoot();
         this.onRefreshSubscriber = null;
@@ -1209,7 +1202,7 @@ class LaDnAnnouncementBarSlot extends HTMLElement {
 
     connectedCallback() {
         this.toggleEvents();
-        ANNOUNCEMENT_BAR_UTILITY.checkCorrectComponentName(this.shadowRoot);
+        STICKY_BAR_UTILITY.checkCorrectComponentName(this.shadowRoot);
         this.onRefreshSubscriber = PubSub.subscribe('onRefresh', this.onUpdate.bind(this));
     }
 
@@ -1259,8 +1252,8 @@ class LaDnAnnouncementBarSlot extends HTMLElement {
 
     repaintShadowRoot() {
         this.shadowRoot.innerHTML = '';
-        this.shadowRoot.appendChild(ANNOUNCEMENT_BAR_SLOT_TEMPLATE.content.cloneNode(true));
-        this.containerNode = this.shadowRoot.querySelector('.la-dn-announcement-bar-slot-container');
+        this.shadowRoot.appendChild(STICKY_BAR_SLOT_TEMPLATE.content.cloneNode(true));
+        this.containerNode = this.shadowRoot.querySelector('.wb-sticky-bar-slot-container');
         if (this.sliderInstance) {
             this.sliderInstance.onDestroy();
         }
@@ -1272,7 +1265,7 @@ class LaDnAnnouncementBarSlot extends HTMLElement {
 
         const _ownMessages = this.messages.filter(msg => msg.__rowId === this.parentRowIndex);
         this.asSlider = this.parentElement.children.length === 1;
-        const _wrapper = this.containerNode.querySelector('.la-dn-announcement-bar-slot-wrapper');
+        const _wrapper = this.containerNode.querySelector('.wb-sticky-bar-slot-wrapper');
         if(_ownMessages.length < 1) {
             return;
         }
@@ -1282,23 +1275,23 @@ class LaDnAnnouncementBarSlot extends HTMLElement {
             }
             this.containerNode.setAttribute('tabindex', '1');
             _ownMessages.forEach(msg => {
-                this.parentElement.containerNode.classList.add('la-dn-announcement-bar-row--slider');
-                this.containerNode.classList.add('la-dn-announcement-bar-slot--slider');
+                this.parentElement.containerNode.classList.add('wb-sticky-bar-row--slider');
+                this.containerNode.classList.add('wb-sticky-bar-slot--slider');
                 _wrapper.innerHTML += `
-                    <la-dn-announcement-bar-message
+                    <wb-sticky-bar-message
                         token="${msg.token}"
                         icon="${msg.icon || ''}"
                         image="${msg.image || ''}"
                     >
                         ${msg.message}
-                    </la-dn-announcement-bar-message>
+                    </wb-sticky-bar-message>
                 `;
             });
 
             this.sliderInstance = new Slider({
                 container: this.containerNode,
                 wrapper: _wrapper,
-                animationMode: this.parentElement.parentElement.cycleAnimationMode, // getting from la-dn-announcement-bar
+                animationMode: this.parentElement.parentElement.cycleAnimationMode, // getting from wb-sticky-bar
                 interval: this.interval,
                 hasControls: this.hasControls,
                 hasIndicators: this.hasIndicators,
@@ -1310,7 +1303,7 @@ class LaDnAnnouncementBarSlot extends HTMLElement {
             this.containerNode.removeAttribute('tabindex');
             const _currToken = _ownMessages[this.itsOwnIndex].token;
             _wrapper.innerHTML = `
-                <la-dn-announcement-bar-message 
+                <wb-sticky-bar-message 
                     token="${_currToken}"
                     animation-highlight-mode="${this.parentElement.parentElement.animationHighlightMode}"
                     animation-goal-achieved-mode="${this.parentElement.parentElement.animationGoalAchievedMode}"
@@ -1320,18 +1313,18 @@ class LaDnAnnouncementBarSlot extends HTMLElement {
                     image="${_ownMessages[this.itsOwnIndex].image || ''}"
                 >
                     ${_ownMessages[this.itsOwnIndex].message}
-                </la-dn-announcement-bar-message>
+                </wb-sticky-bar-message>
             `;
         }
     }
 }
 
-class LaDnAnnouncementBarMessage extends HTMLElement {
+class WbStickyBarMessage extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(ANNOUNCEMENT_BAR_MESSAGE_TEMPLATE.content.cloneNode(true));
-        this.container = this.shadowRoot.querySelector('.la-dn-announcement-bar-message');
+        this.shadowRoot.appendChild(STICKY_BAR_MESSAGE_TEMPLATE.content.cloneNode(true));
+        this.container = this.shadowRoot.querySelector('.wb-sticky-bar-message');
         this.token = null;
         this.animationHighlightMode = DEFAULT_ANIMATION_HIGHLIGHT;
         this.animationGoalAchievedMode = DEFAULT_ANIMATION_GOAL_ACHIEVED;
@@ -1441,16 +1434,16 @@ class LaDnAnnouncementBarMessage extends HTMLElement {
     }
 }
 
-class LaDnAnnouncementBarError extends HTMLElement {
+class WbStickyBarError extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(ANNOUNCEMENT_BAR_ERROR_TEMPLATE.content.cloneNode(true));
+        this.shadowRoot.appendChild(STICKY_BAR_ERROR_TEMPLATE.content.cloneNode(true));
     }
 }
 
-customElements.define('la-dn-announcement-bar', LaDnAnnouncementBar);
-customElements.define('la-dn-announcement-bar-row', LaDnAnnouncementBarRow);
-customElements.define('la-dn-announcement-bar-slot', LaDnAnnouncementBarSlot);
-customElements.define('la-dn-announcement-bar-message', LaDnAnnouncementBarMessage);
-customElements.define('la-dn-announcement-bar-error', LaDnAnnouncementBarError);
+customElements.define('wb-sticky-bar', WbStickyBar);
+customElements.define('wb-sticky-bar-row', WbStickyBarRow);
+customElements.define('wb-sticky-bar-slot', WbStickyBarSlot);
+customElements.define('wb-sticky-bar-message', WbStickyBarMessage);
+customElements.define('wb-sticky-bar-error', WbStickyBarError);
