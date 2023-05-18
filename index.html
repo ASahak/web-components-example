@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Announcement bar</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            user-select: none;
+        }
+    </style>
+    <script src="./scripts.js"></script>
+</head>
+<body>
+<div style="background-color: red">asdasdasd</div>
+<la-dn-announcement-bar
+        animation-on-cycle="slide"
+        animation-on-close="fade"
+        closeable="true"
+        animation-on-highlight="shakeX"
+        animation-on-goal-achieved="shakeX"
+>
+    <la-dn-announcement-bar-row>
+        <la-dn-announcement-bar-slot></la-dn-announcement-bar-slot>
+        <la-dn-announcement-bar-slot></la-dn-announcement-bar-slot>
+        <la-dn-announcement-bar-slot></la-dn-announcement-bar-slot>
+    </la-dn-announcement-bar-row>
+    <la-dn-announcement-bar-row>
+        <la-dn-announcement-bar-slot controls="true" indicators="true" cycle="true" interval="4000"></la-dn-announcement-bar-slot>
+    </la-dn-announcement-bar-row>
+</la-dn-announcement-bar>
+</body>
+</html>
